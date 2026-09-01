@@ -23,13 +23,12 @@ int main(int argc, char **argv)
 	size_t binCount = 0;
 	char **binList = parseCue(cueFile, &binCount);
 	if (!binList) return 1;
-	fclose(cueFile);
 	char *inputPath = argv[1];
 	char *destDir = (argv[2] == NULL) ? "." : argv[2];
 	char *outputName;
 
 	// set output name (dir/game.cue -> dir/game.bin)
-	outputName = setOutputName(inputPath);
+	outputName = setOutputName(inputPath, ".bin");
 
 	// define file output path
 	char *fullPath;
@@ -71,14 +70,31 @@ int main(int argc, char **argv)
 		free(fullPath);
 	}
 
+	// generate cue file
+	size_t *binSizes = getBinSizes(srcDir, binList, binCount);
+	char *tempCueName = setOutputName(inputPath, ".cue");
+
+	char *outputCuePath = setFullPath(destDir, tempCueName);
+	FILE *outputCue;
+	outputCue = fopen(outputCuePath, "w");
+
+	if (checkFile(outputCue)) return 1;
+	rewind(cueFile);
+	generateCue(cueFile, outputCue, binSizes);
+
+	// cleanup
 	for (int i = 0; i < binCount; i++)
 	{
 		free(binList[i]);
 	}
 
-	if (strcmp(srcDir, ".") != 0) free(srcDir);
 	free(binList);
+	free(binSizes);
+	free(tempCueName);
+	if (strcmp(srcDir, ".") != 0) free(srcDir);
+	fclose(cueFile);
 	fclose(outputBin);
+	fclose(outputCue);
 
 	return 0;
 }
