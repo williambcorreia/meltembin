@@ -118,7 +118,7 @@ char *setOutputName(char *path, char *extension)
 	return outputName;
 }
 
-void copyFile(FILE *source, FILE *destination)
+void copyFile(FILE *source, FILE *destination, size_t totalSize, size_t *totalCopied)
 {
 	size_t bytesRead;
 	unsigned char fileBuffer[8192];
@@ -137,6 +137,11 @@ void copyFile(FILE *source, FILE *destination)
 			}
 
 			bytesWritten += written;
+			*totalCopied += written;
+
+			int percent = *totalCopied * 100 / totalSize;
+			printf("\r[%3d%%]", percent);
+			fflush(stdout);
 		}
 	}
 }
