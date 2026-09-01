@@ -24,6 +24,7 @@ int main(int argc, char **argv)
 	char *srcDir = NULL;
 	char *tempCueName = NULL;
 	char *outputCuePath = NULL;
+	char *outputBinName = NULL;
 
 	size_t binCount = 0;
 	char **binList = NULL;
@@ -120,8 +121,13 @@ int main(int argc, char **argv)
 	outputCuePath = NULL;
 
 	// generate cue
+	outputBinName = setOutputName(inputPath, ".bin");
+	if (!outputBinName) goto cleanup;
 	rewind(cueFile);
-	generateCue(cueFile, outputCue, binSizes);
+	generateCue(cueFile, outputCue, binSizes, outputBinName);
+
+	free(outputCuePath);
+	outputCuePath = NULL;
 
 	status = 0;
 
@@ -135,6 +141,7 @@ cleanup:
 	free(fullPath);
 	free(srcDir);
 	free(tempCueName);
+	free(outputBinName);
 	free(outputCuePath);
 	free(binSizes);
 	freeBinList(binList, binCount);
