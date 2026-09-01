@@ -23,6 +23,35 @@ int checkFile(FILE *file)
 	return 0;
 }
 
+void freeBinList(char **binList, size_t binCount)
+{
+	if (binList == NULL) return;
+	for (size_t i = 0; i < binCount; i++)
+	{
+		free(binList[i]);
+	}
+
+	free(binList);
+}
+
+char *setFullPath(char *dir, char *outputName)
+{
+	size_t fullPathSize = strlen(dir) + strlen(outputName) + 2;
+	char *fullPath = malloc(fullPathSize);
+	if (checkMalloc(fullPath)) return NULL;
+
+	if (dir[strlen(dir) - 1] == '/') 
+	{
+		snprintf(fullPath, fullPathSize, "%s%s", dir, outputName);
+	} 
+	else 
+	{
+		snprintf(fullPath, fullPathSize, "%s/%s", dir, outputName);
+	}
+
+	return fullPath;
+}
+
 char **parseCue(FILE *cueFile, size_t *binCount)
 {
 	char line[1024];
@@ -41,14 +70,16 @@ char **parseCue(FILE *cueFile, size_t *binCount)
 			size_t length = end - start - 1;
 
 			char *binName = malloc(length + 1);
+			if (checkMalloc(binName)) { freeBinList(binList, *binCount); return NULL; }
 			memcpy(binName, start + 1, length);
 			binName[length] = '\0';
 
-			(*binCount)++;
-
-			char **temp = realloc(binList, (*binCount) * (sizeof(char *)));
+			char **temp = realloc(binList, (*binCount + 1) * (sizeof(char *)));
+			if (checkMalloc(temp)) { free(binName); freeBinList(binList, *binCount); return NULL; }
 			binList = temp;
-			binList[(*binCount) - 1] = binName;
+			binList[*binCount] = binName;
+
+			(*binCount)++;
 		}
 	}
 	return binList;
@@ -57,12 +88,14 @@ char **parseCue(FILE *cueFile, size_t *binCount)
 size_t *getBinSizes(char *srcDir, char **binList, size_t binCount)
 {
 	size_t *binSizes = malloc(binCount * sizeof(size_t));
+	if (checkMalloc(binSizes)) return NULL;
 	struct stat st;
 
 	for (size_t i = 0; i < binCount; i++)
 	{
 		char *fullPath = setFullPath(srcDir, binList[i]);
-		stat(fullPath, &st);
+		if (checkMalloc(fullPath)) { free(binSizes); return NULL; }
+		if (stat(fullPath, &st) != 0) { free(binSizes); free(fullPath); return NULL; }
 		binSizes[i] = st.st_size;
 		free(fullPath);
 	}
@@ -79,26 +112,10 @@ char *setOutputName(char *path, char *extension)
 
 	size_t outputNameSize = (strlen(fileName) - 4) + 4 + 1;
 	outputName = malloc(outputNameSize);
+	if (checkMalloc(outputName)) return NULL;
 	snprintf(outputName, outputNameSize, "%.*s%s", (int)(strlen(fileName) - 4), fileName, extension);
 
 	return outputName;
-}
-
-char *setFullPath(char *dir, char *outputName)
-{
-	size_t fullPathSize = strlen(dir) + strlen(outputName) + 2;
-	char *fullPath = malloc(fullPathSize);
-
-	if (dir[strlen(dir) - 1] == '/') 
-	{
-		snprintf(fullPath, fullPathSize, "%s%s", dir, outputName);
-	} 
-	else 
-	{
-		snprintf(fullPath, fullPathSize, "%s/%s", dir, outputName);
-	}
-
-	return fullPath;
 }
 
 void copyFile(FILE *source, FILE *destination)
@@ -111,7 +128,15 @@ void copyFile(FILE *source, FILE *destination)
 		size_t bytesWritten = 0;
 		while(bytesWritten < bytesRead)
 		{
-			bytesWritten += fwrite(fileBuffer + bytesWritten, 1, bytesRead - bytesWritten, destination);
+			size_t written = fwrite(fileBuffer + bytesWritten, 1, bytesRead - bytesWritten, destination);
+
+			if (written == 0)
+			{
+				perror("fwrite");
+				return;
+			}
+
+			bytesWritten += written;
 		}
 	}
 }
