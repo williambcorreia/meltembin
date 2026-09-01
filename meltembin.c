@@ -6,95 +6,138 @@
 
 int main(int argc, char **argv)
 {
-	// check if has enough args
 	if (argc < 2)
 	{
 		printf("usage: meltembin [.cue] [destDir]\n");
 		return 1;
 	}
 
-	// open file for copy
-	FILE *cueFile;
-	FILE *outputBin;
+	int status = 1;
 
-	cueFile = fopen(argv[1], "r");
-	if (checkFile(cueFile)) return 1;
+	FILE *cueFile = NULL;
+	FILE *outputBin = NULL;
+	FILE *outputCue = NULL;
+	FILE *onCopyBin = NULL;
+
+	char *outputName = NULL;
+	char *fullPath = NULL;
+	char *srcDir = NULL;
+	char *tempCueName = NULL;
+	char *outputCuePath = NULL;
 
 	size_t binCount = 0;
-	char **binList = parseCue(cueFile, &binCount);
-	if (!binList) return 1;
+	char **binList = NULL;
+	size_t *binSizes = NULL;
+
 	char *inputPath = argv[1];
 	char *destDir = (argv[2] == NULL) ? "." : argv[2];
-	char *outputName;
 
-	// set output name (dir/game.cue -> dir/game.bin)
+	// open cue file
+	cueFile = fopen(inputPath, "r");
+	if (checkFile(cueFile)) goto cleanup;
+
+	// parse cue
+	binList = parseCue(cueFile, &binCount);
+	if (!binList) goto cleanup;
+
+	// set output name
 	outputName = setOutputName(inputPath, ".bin");
+	if (!outputName) goto cleanup;
 
-	// define file output path
-	char *fullPath;
+	// define output bin path
 	fullPath = setFullPath(destDir, outputName);
+	if (!fullPath) goto cleanup;
+
 	outputBin = fopen(fullPath, "wb");
-	if (checkFile(outputBin)) return 1;
+	if (checkFile(outputBin)) goto cleanup;
 
 	free(outputName);
+	outputName = NULL;
+
 	free(fullPath);
+	fullPath = NULL;
 
 	printf("\nMelting bins to single file...\n\n");
 
-	char *srcDir;
+	// define source directory
 	if (strrchr(inputPath, '/') == NULL)
 	{
-		srcDir = ".";
+		srcDir = malloc(2);
+		if (!srcDir) goto cleanup;
+
+		strcpy(srcDir, ".");
 	}
 	else
 	{
 		char *slash = strrchr(inputPath, '/');
 		size_t srcDirSize = slash - inputPath;
+
 		srcDir = malloc(srcDirSize + 1);
-		if (checkMalloc(srcDir)) return 1;
-		srcDir[srcDirSize] = '\0';
+		if (!srcDir) goto cleanup;
 
 		memcpy(srcDir, inputPath, srcDirSize);
+		srcDir[srcDirSize] = '\0';
 	}
 
 	// copy files
-	FILE *onCopyBin;
-
-	for (int i = 0; i < binCount; i++)
+	for (size_t i = 0; i < binCount; i++)
 	{
 		fullPath = setFullPath(srcDir, binList[i]);
+		if (!fullPath) goto cleanup;
+
 		onCopyBin = fopen(fullPath, "rb");
-		if (checkFile(onCopyBin)) return 1;
+		if (checkFile(onCopyBin)) goto cleanup;
+
 		copyFile(onCopyBin, outputBin);
+
 		fclose(onCopyBin);
+		onCopyBin = NULL;
+
 		free(fullPath);
+		fullPath = NULL;
 	}
 
-	// generate cue file
-	size_t *binSizes = getBinSizes(srcDir, binList, binCount);
-	char *tempCueName = setOutputName(inputPath, ".cue");
+	// get bin sizes
+	binSizes = getBinSizes(srcDir, binList, binCount);
+	if (!binSizes) goto cleanup;
 
-	char *outputCuePath = setFullPath(destDir, tempCueName);
-	FILE *outputCue;
+	// generate output cue name
+	tempCueName = setOutputName(inputPath, ".cue");
+	if (!tempCueName) goto cleanup;
+
+	// define output cue path
+	outputCuePath = setFullPath(destDir, tempCueName);
+	if (!outputCuePath) goto cleanup;
+
+	free(tempCueName);
+	tempCueName = NULL;
+
+	// open output cue
 	outputCue = fopen(outputCuePath, "w");
+	if (checkFile(outputCue)) goto cleanup;
 
-	if (checkFile(outputCue)) return 1;
+	free(outputCuePath);
+	outputCuePath = NULL;
+
+	// generate cue
 	rewind(cueFile);
 	generateCue(cueFile, outputCue, binSizes);
 
-	// cleanup
-	for (int i = 0; i < binCount; i++)
-	{
-		free(binList[i]);
-	}
+	status = 0;
 
-	free(binList);
-	free(binSizes);
+cleanup:
+
+	if (onCopyBin != NULL)fclose(onCopyBin);
+	if (cueFile != NULL) fclose(cueFile);
+	if (outputCue != NULL) fclose(outputCue);
+	if (outputBin != NULL) fclose(outputBin);
+	free(outputName);
+	free(fullPath);
+	free(srcDir);
 	free(tempCueName);
-	if (strcmp(srcDir, ".") != 0) free(srcDir);
-	fclose(cueFile);
-	fclose(outputBin);
-	fclose(outputCue);
+	free(outputCuePath);
+	free(binSizes);
+	freeBinList(binList, binCount);
 
-	return 0;
+	return status;
 }
