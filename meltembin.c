@@ -80,6 +80,18 @@ int main(int argc, char **argv)
 		srcDir[srcDirSize] = '\0';
 	}
 
+	// get bin sizes
+	binSizes = getBinSizes(srcDir, binList, binCount);
+	if (!binSizes) goto cleanup;
+
+	// calculate total size for percentage
+	size_t totalSize = 0;
+	size_t totalCopied = 0;
+	for (size_t j = 0; j < binCount; j++)
+	{
+		totalSize += binSizes[j];
+	}
+
 	// copy files
 	for (size_t i = 0; i < binCount; i++)
 	{
@@ -89,7 +101,7 @@ int main(int argc, char **argv)
 		onCopyBin = fopen(fullPath, "rb");
 		if (checkFile(onCopyBin)) goto cleanup;
 
-		copyFile(onCopyBin, outputBin);
+		copyFile(onCopyBin, outputBin, totalSize, &totalCopied);
 
 		fclose(onCopyBin);
 		onCopyBin = NULL;
@@ -97,10 +109,7 @@ int main(int argc, char **argv)
 		free(fullPath);
 		fullPath = NULL;
 	}
-
-	// get bin sizes
-	binSizes = getBinSizes(srcDir, binList, binCount);
-	if (!binSizes) goto cleanup;
+	printf(" Done!\n");
 
 	// generate output cue name
 	tempCueName = setOutputName(inputPath, ".cue");
