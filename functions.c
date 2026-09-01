@@ -150,18 +150,23 @@ void generateCue(FILE *srcCue, FILE *dstCue, size_t *binSizes, char *outputBinNa
 
 	while(fgets(line, sizeof(line), srcCue) != NULL)
 	{
+		char command[16];
+
+		if (sscanf(line, "%15s", command) != 1) continue;
+
 		if (strncmp(line, "FILE", 4) == 0)
 		{
 			fprintf(dstCue, "FILE \"%s\" BINARY\n", outputBinName);
 			
+			binStart = binEnd;
 			binEnd += binSizes[track];
 			track++;
 		}
-		else if(strncmp(line, "INDEX", 5) == 0)
+		else if(strcmp(command, "INDEX") == 0)
 		{
 			int index, min, sec, frame;
 
-			if (sscanf(line, "INDEX %d %d:%d:%d", &index, &min, &sec, &frame) == 4)
+			if (sscanf(line, "%*s %d %d:%d:%d", &index, &min, &sec, &frame) == 4)
 			{
 				size_t totalFrames = binStart / 2352;
 				totalFrames += (min * 60 + sec) * 75 + frame;
