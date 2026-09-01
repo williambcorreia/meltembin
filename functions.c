@@ -141,7 +141,7 @@ void copyFile(FILE *source, FILE *destination)
 	}
 }
 
-void generateCue(FILE *srcCue, FILE *dstCue, size_t *binSizes)
+void generateCue(FILE *srcCue, FILE *dstCue, size_t *binSizes, char *outputBinName)
 {
 	char line[1024];
 	size_t track = 0;
@@ -152,21 +152,7 @@ void generateCue(FILE *srcCue, FILE *dstCue, size_t *binSizes)
 	{
 		if (strncmp(line, "FILE", 4) == 0)
 		{
-			binStart = binEnd;
-			char *start = strchr(line, '"');
-			if (start == NULL) continue;
-			char *trackStart = strchr(start, '(');
-			if (trackStart == NULL) continue;
-
-			char *end = strchr(start + 1, '"');
-			if (end == NULL) continue;
-			char *trackEnd = strchr(trackStart, ')');
-			if (trackEnd == NULL) continue;
-
-			fputs("FILE ", dstCue);
-			fwrite(start, sizeof(char), trackStart - start - 1, dstCue);
-			fwrite(trackEnd + 1, sizeof(char), end - trackEnd - 1, dstCue);
-			fputs(end, dstCue);
+			fprintf(dstCue, "FILE \"%s\" BINARY\n", outputBinName);
 			
 			binEnd += binSizes[track];
 			track++;
