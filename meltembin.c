@@ -8,7 +8,7 @@ int main(int argc, char **argv)
 {
 	if (argc < 2)
 	{
-		printf("usage: meltembin [.cue] [destDir]\n");
+		printf("usage: meltembin <cue-file> [dest-dir]\n");
 		return 1;
 	}
 
