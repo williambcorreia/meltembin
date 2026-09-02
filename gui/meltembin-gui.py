@@ -87,7 +87,7 @@ outputLabel = ttk.Label(main, text="Output .BIN")
 outputLabel.grid(row=3, column=0, pady=10)
 outputPath = ttk.Entry(main)
 outputPath.grid(row=4, column=0, padx=10, sticky="ew")
-outputBrowse = ttk.Button(main, text="Save at...", width=20, command=openOutputDirectory)
+outputBrowse = ttk.Button(main, text="Save to...", width=20, command=openOutputDirectory)
 outputBrowse.grid(row=4, column=1, padx=10)
 
 #main.rowconfigure(5, minsize=30)
