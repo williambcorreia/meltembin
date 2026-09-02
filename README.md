@@ -1,16 +1,15 @@
 # meltembin
 
-meltembin (a pun on "melt em' bin") is a simple program written in C that parses a `.cue` file and melts all identified `.bin` files into a single one.
+meltembin (a pun on "melt em' bin") is a simple program written in C that parses a `.cue` file and melts all referenced `.bin` files into a single one.
 
 ## requirements
 
 * POSIX-compatible OS
 * C compiler available on `PATH` (such as `gcc` or `clang`)
 
-## installation
+## installation via compilation
 
-For now, meltembin can be installed with:
-
+### CLI
 ```bash
 git clone https://github.com/williambcorreia/meltembin
 cd meltembin
@@ -19,6 +18,26 @@ sudo mv meltembin /usr/local/bin
 ```
 
 In future versions, a Makefile-based installation will also be available.
+
+### GUI
+
+```bash
+git clone https://github.com/williambcorreia/meltembin
+cd meltembin
+cc meltembin.c functions.c -o gui/meltembin
+cd gui
+python -m venv .venv
+source .venv/bin/activate
+pip install pyinstaller
+pyinstaller --onefile --windowed --add-binary "meltembin:." meltembin-gui.py
+cd dist
+sudo mv meltembin-gui /usr/local/bin
+```
+
+If you want the CLI but don't wanna compile the GUI, just install the CLI and run the Python script:
+```bash
+python gui/meltembin-gui.py
+```
 
 ## usage
 
