@@ -1,9 +1,17 @@
+import os
+import sys
 import subprocess
 import threading
 import time
 import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog
+from shutil import which
+
+if getattr(sys, "frozen", False):
+    meltembin = os.path.join(sys._MEIPASS, "meltembin")
+else:
+    meltembin = which("meltembin")
 
 def openCue():
     path = filedialog.askopenfilename(
@@ -21,7 +29,7 @@ def openOutputDirectory():
         outputPath.insert(0, path)
 
 def runMeltembin(source, output):
-    process = subprocess.Popen(["./meltembin", source, output], 
+    process = subprocess.Popen([meltembin, source, output], 
                                stdout=subprocess.PIPE, 
                                stderr=subprocess.STDOUT, 
                                text=True
@@ -32,13 +40,17 @@ def runMeltembin(source, output):
         now = time.monotonic()
 
         if (now - lastUpdate) >= 0.05:
-            window.after(0, meltLabel.configure(text=line.strip()))
+            window.after(0, meltLabel.configure, {"text": line.strip()})
             lastUpdate = now
     process.wait()
 
 def melt():
     source = sourcePath.get()
     output = outputPath.get()
+
+    if meltembin is None:
+        meltLabel.configure(text="Error: meltembin binary not found!")
+        return
 
     if (not source):
         meltLabel.configure(text="Error: a CUE file needs to be selected!")
