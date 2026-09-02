@@ -1,27 +1,59 @@
 # meltembin
 
-meltembin is a simple program written in C that parses a `.cue` file and melts all identified `.bin` files into a single one
+meltembin is a simple program written in C that parses a `.cue` file and melts all identified `.bin` files into a single one.
 
 ## requirements
 
-- POSIX-compatible OS
-- C compiler available on `PATH` (such as `gcc` or `clang`)
+* POSIX-compatible OS
+* C compiler available on `PATH` (such as `gcc` or `clang`)
 
 ## usage
 
-the intended usage for meltembin is `meltembin [.cue] [destDir]`
+The intended usage for meltembin is:
 
-if `destDir` is not specified, generates the `.bin` and `.cue` in the current directory `.`
+```bash
+meltembin <cue-file> [dest-dir]
+```
+
+If `dest-dir` is not specified, the generated `.bin` and `.cue` files are created in the current directory (`.`).
+
+Currently, the output filename cannot be specified manually. The generated `.bin` file keeps the same base name as the input `.cue` file.
+
+For example:
+
+```bash
+meltembin bingame/Castlevania\ SOTN\ \(USA\).cue dest-dir/
+```
+
+generates:
+
+```text
+dest-dir/
+├── Castlevania SOTN (USA).bin
+└── Castlevania SOTN (USA).cue
+```
+
+If no destination directory is specified:
+
+```bash
+meltembin bingame/Castlevania\ SOTN\ \(USA\).cue
+```
+
+the generated files are created in the current directory.
 
 ## installation
-currently, the installation process is:
+
+Currently, the installation process is:
+
 ```bash
 git clone https://github.com/williambcorreia/meltembin
 cd meltembin
 cc meltembin.c functions.c -o meltembin
 sudo mv meltembin /usr/local/bin
 ```
-in future versions, a Makefile-based installation will also be available
+
+In future versions, a Makefile-based installation will also be available.
 
 ## status
-the project is currently functional and under active development
+
+The project is currently functional and under active development.
