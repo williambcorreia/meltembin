@@ -1,6 +1,6 @@
 # meltembin
 
-meltembin is a simple program written in C that parses a `.cue` file and melts all identified `.bin` files into a single one.
+meltembin (from the joke melt em' bin) is a simple program written in C that parses a `.cue` file and melts all identified `.bin` files into a single one.
 
 ## requirements
 
@@ -13,6 +13,14 @@ The intended usage for meltembin is:
 
 ```bash
 meltembin <cue-file> [dest-dir]
+```
+
+The program currently expects PSX BIN files referenced by the CUE sheet to use 2352-byte sectors.
+Example:
+```text
+FILE "Castlevania - Symphony of the Night (USA) (Track 1).bin" BINARY
+  TRACK 01 MODE2/2352
+    INDEX 01 00:00:00
 ```
 
 If `dest-dir` is not specified, the generated `.bin` and `.cue` files are created in the current directory (`.`).
@@ -43,7 +51,7 @@ the generated files are created in the current directory.
 
 ## installation
 
-Currently, the installation process is:
+For now, meltembin can be installed with:
 
 ```bash
 git clone https://github.com/williambcorreia/meltembin
