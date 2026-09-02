@@ -34,7 +34,7 @@ cd dist
 sudo mv meltembin-gui /usr/local/bin
 ```
 
-If you want the CLI but don't wanna compile the GUI, just install the CLI and run the Python script:
+If you only want the CLI, just run the Python script:
 ```bash
 python gui/meltembin-gui.py
 ```
