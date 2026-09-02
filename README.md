@@ -1,6 +1,6 @@
 # meltembin
 
-meltembin (from the joke melt em' bin) is a simple program written in C that parses a `.cue` file and melts all identified `.bin` files into a single one.
+meltembin (a pun on "melt em' bin") is a simple program written in C that parses a `.cue` file and melts all identified `.bin` files into a single one.
 
 ## requirements
 
