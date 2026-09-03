@@ -85,12 +85,11 @@ jobs:
 
       - name: Build meltemgui
         working-directory: gui
-        shell: msys2 {0}
         run: |
-          pyinstaller \
-            --onefile \
-            --windowed \
-            --add-binary "../meltembin;." \
+          pyinstaller `
+            --onefile `
+            --windowed `
+            --add-binary "../meltembin;." `
             meltemgui.py
 
       - name: Prepare release files
