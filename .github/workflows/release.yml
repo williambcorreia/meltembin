@@ -85,6 +85,7 @@ jobs:
 
       - name: Build meltemgui
         working-directory: gui
+        shell: pwsh
         run: |
           pyinstaller `
             --onefile `
