@@ -37,12 +37,15 @@ def runMeltembin(source, output):
     lastUpdate = 0
 
     for line in process.stdout:
+        lastLine = line.strip()
         now = time.monotonic()
 
         if (now - lastUpdate) >= 0.05:
-            window.after(0, meltLabel.configure, {"text": line.strip()})
+            window.after(0, meltLabel.configure, {"text": lastLine})
             lastUpdate = now
+
     process.wait()
+    window.after(0, meltLabel.configure, {"text": lastLine})
 
 def melt():
     source = sourcePath.get()
