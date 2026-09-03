@@ -4,8 +4,9 @@ meltembin (a pun on "melt em' bin") is a simple program written in C that parses
 
 ## requirements
 
-* POSIX-compatible OS
-* C compiler available on `PATH` (such as `gcc` or `clang`)
+- POSIX-compatible OS or Windows
+- C compiler available on `PATH` (such as `gcc` or `clang`)
+- Python 3.x (if building the GUI is desired)
 
 ## releases
 
@@ -16,7 +17,6 @@ Available builds include:
 - Linux CLI x86-64
 - Linux GUI x86-64
 - Windows GUI x86-64
-- Source code
 
 ## installation via compilation
 
