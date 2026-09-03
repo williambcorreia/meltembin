@@ -132,20 +132,6 @@ jobs:
           name: windows
           path: release
 
-      - name: Create source archives
-        run: |
-          git archive \
-            --format=tar.gz \
-            --prefix=meltembin-${GITHUB_REF_NAME}/ \
-            "${GITHUB_REF_NAME}" \
-            > "release/meltembin-${GITHUB_REF_NAME}-source.tar.gz"
-
-          git archive \
-            --format=zip \
-            --prefix=meltembin-${GITHUB_REF_NAME}/ \
-            "${GITHUB_REF_NAME}" \
-            > "release/meltembin-${GITHUB_REF_NAME}-source.zip"
-
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
