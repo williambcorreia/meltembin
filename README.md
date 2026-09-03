@@ -7,7 +7,20 @@ meltembin (a pun on "melt em' bin") is a simple program written in C that parses
 * POSIX-compatible OS
 * C compiler available on `PATH` (such as `gcc` or `clang`)
 
+## releases
+
+Pre-built binaries are available on the [Releases](https://github.com/williambcorreia/meltembin/releases) page.
+
+Available builds include:
+
+- Linux CLI x86-64
+- Linux GUI x86-64
+- Windows GUI x86-64
+- Source code
+
 ## installation via compilation
+
+This guide is intended for users who want to build the binary themselves or use an unsupported architecture (ARM64, ARM32, x86).
 
 ### CLI
 ```bash
@@ -16,8 +29,6 @@ cd meltembin
 cc meltembin.c functions.c -o meltembin
 sudo cp meltembin /usr/local/bin
 ```
-
-In future versions, a Makefile-based installation will also be available.
 
 ### GUI
 
@@ -33,7 +44,7 @@ pyinstaller --onefile --windowed --add-binary "meltembin:." meltemgui.py
 sudo cp dist/meltemgui /usr/local/bin
 ```
 
-If you only want the CLI, just run the Python script:
+Alternatively, you can run the GUI directly with Python:
 ```bash
 python gui/meltemgui.py
 ```
