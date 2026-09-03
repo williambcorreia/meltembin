@@ -81,7 +81,8 @@ jobs:
       - name: Build meltembin
         shell: msys2 {0}
         run: |
-          gcc meltembin.c functions.c -o meltembin
+          gcc meltembin.c functions.c -o gui/meltembin.exe
+          mv gui/meltembin.exe gui/meltembin
 
       - name: Build meltemgui
         working-directory: gui
@@ -90,7 +91,7 @@ jobs:
           python -m PyInstaller `
             --onefile `
             --windowed `
-            --add-binary "../meltembin;." `
+            --add-binary "meltembin;." `
             meltemgui.py
 
       - name: Prepare release files
