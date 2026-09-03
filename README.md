@@ -14,7 +14,7 @@ meltembin (a pun on "melt em' bin") is a simple program written in C that parses
 git clone https://github.com/williambcorreia/meltembin
 cd meltembin
 cc meltembin.c functions.c -o meltembin
-sudo mv meltembin /usr/local/bin
+sudo cp meltembin /usr/local/bin
 ```
 
 In future versions, a Makefile-based installation will also be available.
@@ -30,8 +30,7 @@ python -m venv .venv
 source .venv/bin/activate
 pip install pyinstaller
 pyinstaller --onefile --windowed --add-binary "meltembin:." meltemgui.py
-cd dist
-sudo mv meltemgui /usr/local/bin
+sudo cp dist/meltemgui /usr/local/bin
 ```
 
 If you only want the CLI, just run the Python script:
