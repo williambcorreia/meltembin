@@ -29,14 +29,14 @@ cd gui
 python -m venv .venv
 source .venv/bin/activate
 pip install pyinstaller
-pyinstaller --onefile --windowed --add-binary "meltembin:." meltembin-gui.py
+pyinstaller --onefile --windowed --add-binary "meltembin:." meltemgui.py
 cd dist
-sudo mv meltembin-gui /usr/local/bin
+sudo mv meltemgui /usr/local/bin
 ```
 
 If you only want the CLI, just run the Python script:
 ```bash
-python gui/meltembin-gui.py
+python gui/meltemgui.py
 ```
 
 ## usage
