@@ -29,11 +29,16 @@ def openOutputDirectory():
         outputPath.insert(0, path)
 
 def runMeltembin(source, output):
-    process = subprocess.Popen([meltembin, source, output], 
-                               stdout=subprocess.PIPE, 
-                               stderr=subprocess.STDOUT, 
-                               text=True
-                               )
+    kwargs = {
+            "stdout": subprocess.PIPE,
+            "stderr": subprocess.STDOUT,
+            "text": True
+        }
+
+    if sys.platform == "win32":
+        kwargs["creationflags"] = subprocess.CREATE_NO_WINDOW
+
+    process = subprocess.Popen([meltembin, source, output], **kwargs)
     lastUpdate = 0
 
     for line in process.stdout:
@@ -73,8 +78,14 @@ style.configure("TEntry", padding=6)
 style.configure("TLabel", font=("DejaVu Sans", 12))
 style.configure("TButton", font=("DejaVu Sans", 12))
 
-main = ttk.Frame(window)
-main.grid(row=0, column=0)
+container = ttk.Frame(window)
+container.grid(row=0, column=0, sticky="nsew")
+
+container.rowconfigure(0, weight=1)
+container.columnconfigure(0, weight=1)
+
+main = ttk.Frame(container)
+main.grid(row=0, column=0, sticky="ew")
 main.columnconfigure(0, weight=1)
 
 sourceLabel = ttk.Label(main, text="Source .CUE")
