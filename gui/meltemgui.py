@@ -41,6 +41,7 @@ def runMeltembin(source, output):
     process = subprocess.Popen([meltembin, source, output], **kwargs)
     lastUpdate = 0
 
+    lastLine = ""
     for line in process.stdout:
         lastLine = line.strip()
         now = time.monotonic()
@@ -51,6 +52,7 @@ def runMeltembin(source, output):
 
     process.wait()
     window.after(0, meltLabel.configure, {"text": lastLine})
+    window.after(0, meltButton.configure, {"state": "normal"})
 
 def melt():
     source = sourcePath.get()
@@ -64,6 +66,7 @@ def melt():
         meltLabel.configure(text="Error: a CUE file needs to be selected!")
         return
 
+    meltButton.configure(state="disabled")
     threading.Thread(target=runMeltembin, args=(source, output), daemon=True).start()
 
 window = tk.Tk()
