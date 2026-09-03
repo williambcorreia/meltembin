@@ -76,7 +76,7 @@ jobs:
           python-version: '3.x'
 
       - name: Install PyInstaller
-        run: pip install pyinstaller
+        run: pip install PyInstaller
 
       - name: Build meltembin
         shell: msys2 {0}
@@ -85,9 +85,9 @@ jobs:
 
       - name: Build meltemgui
         working-directory: gui
-        shell: pwsh
+        shell: powershell
         run: |
-          pyinstaller `
+          python -m PyInstaller `
             --onefile `
             --windowed `
             --add-binary "../meltembin;." `
