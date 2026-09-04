@@ -25,7 +25,9 @@ This guide is intended for users on POSIX-compatible systems who want to build t
 Read it like this: ACTION | CLI | GUI
 
 Build | `make` | `make gui`
+
 Build and install | `make install` | `make install-gui`
+
 Uninstall | `make uninstall` | `make uninstall-gui`
 
 Alternatively, you can run the GUI directly with Python (requires the installed CLI binary):
