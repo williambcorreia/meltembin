@@ -28,7 +28,7 @@ Build | `make` | `make gui`
 Build and install | `make install` | `make install-gui`
 Uninstall | `make uninstall` | `make uninstall-gui`
 
-Alternatively, you can run the GUI directly with Python:
+Alternatively, you can run the GUI directly with Python (requires the installed CLI binary):
 ```bash
 python gui/meltemgui.py
 ```
