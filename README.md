@@ -33,6 +33,15 @@ Alternatively, you can run the GUI directly with Python (requires the installed 
 python gui/meltemgui.py
 ```
 
+## supported BIN format
+The program currently expects PSX BIN files referenced by the CUE sheet to use 2352-byte sectors.
+Example:
+```text
+FILE "Castlevania - Symphony of the Night (USA) (Track 1).bin" BINARY
+  TRACK 01 MODE2/2352
+    INDEX 01 00:00:00
+```
+
 ## usage
 
 The intended usage for meltembin is:
@@ -59,19 +68,23 @@ dest-dir/
 
 ### batch processing
 
-The binary doesn't have a batch mode, but you can easily achieve this with a shell command:
+The binary doesn't have a batch function, but you can easily achieve this with a shell command:
 
 ```bash
 for cue in srcdir/*.cue; do meltembin "$cue" dest-dir/; done
 ```
 
-## supported BIN format
-The program currently expects PSX BIN files referenced by the CUE sheet to use 2352-byte sectors.
+### renaming output bin
+
+To rename the output `.bin` and its references on the `.cue` sheet, you can execute the `sed` command.
+
+First, substitute all occurrences of the game in `game.cue` with `sed -i 's/game.bin/NewGame.bin/g' .cuefile`, then the actual game file with `mv game.bin NewGame.bin`.
+
 Example:
-```text
-FILE "Castlevania - Symphony of the Night (USA) (Track 1).bin" BINARY
-  TRACK 01 MODE2/2352
-    INDEX 01 00:00:00
+
+```bash
+sed -i 's/Castlevania - Symphony of the Night (USA).bin/Castlevania SOTN.bin/g' Castlevania\ -\ Symphony\ of\ the\ Night\ \(USA\).cue
+mv 'Castlevania - Symphony of the Night (USA).bin' 'Castlevania SOTN.bin'
 ```
 
 ## status
