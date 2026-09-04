@@ -1,0 +1,32 @@
+CC = cc
+CFLAGS = -Wall -Wextra -Wno-use-after-free
+
+.ONESHELL:
+
+all: meltembin
+
+meltembin: meltembin.c functions.c functions.h
+	@$(CC) $(CFLAGS) meltembin.c functions.c -o meltembin
+
+gui: meltembin gui/meltemgui.py
+	@mv meltembin gui
+	@cd gui
+	@python -m venv .venv
+	@./.venv/bin/python -m pip install -q pyinstaller
+	@./.venv/bin/python -m PyInstaller --log-level ERROR --onefile --windowed --add-binary "meltembin:." meltemgui.py
+	@mv dist/meltemgui ..
+	@rm -rf dist build .venv meltemgui.spec meltembin
+
+install-gui: gui
+	@cd gui
+	@sudo install -Dm755 meltemgui /usr/local/bin/meltemgui
+	@rm meltemgui
+
+install: meltembin
+	@sudo install -Dm755 meltembin /usr/local/bin/meltembin
+	@rm meltembin
+
+uninstall:
+	@sudo rm -f /usr/local/bin/meltembin
+
+.PHONY: all install uninstall gui install-gui
