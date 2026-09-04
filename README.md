@@ -57,6 +57,12 @@ The intended usage for meltembin is:
 meltembin <cue-file> [dest-dir]
 ```
 
+The binary doesn't have a batch mode, but you can easily achieve this with a shell command:
+
+```bash
+for cue in srcdir/*.cue; do meltembin "$cue" dest-dir/; done
+```
+
 The program currently expects PSX BIN files referenced by the CUE sheet to use 2352-byte sectors.
 Example:
 ```text
