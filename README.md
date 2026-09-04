@@ -2,12 +2,6 @@
 
 meltembin (a pun on "melt em' bin") is a simple program written in C that parses a `.cue` file and melts all referenced `.bin` files into a single one.
 
-## requirements
-
-- POSIX-compatible OS or Windows
-- C compiler available on `PATH` (such as `gcc` or `clang`)
-- Python 3.x (if building the GUI is desired)
-
 ## releases
 
 Pre-built binaries are available on the [Releases](https://github.com/williambcorreia/meltembin/releases) page.
@@ -18,31 +12,21 @@ Available builds include:
 - Linux GUI x86-64
 - Windows GUI x86-64
 
-## installation via compilation
+## building from source
 
-This guide is intended for users who want to build the binary themselves or use an unsupported architecture (ARM64, ARM32, x86).
+This guide is intended for users on POSIX-compatible systems who want to build the binary themselves or use an unsupported architecture (ARM64, ARM32, x86).
 
-### CLI
-```bash
-git clone https://github.com/williambcorreia/meltembin
-cd meltembin
-cc meltembin.c functions.c -o meltembin
-sudo cp meltembin /usr/local/bin
-```
+### requirements
 
-### GUI
+- POSIX-compatible OS
+- C compiler available on `PATH` (such as `gcc` or `clang`)
+- Python 3.x (if building the GUI is desired)
 
-```bash
-git clone https://github.com/williambcorreia/meltembin
-cd meltembin
-cc meltembin.c functions.c -o gui/meltembin
-cd gui
-python -m venv .venv
-source .venv/bin/activate
-pip install pyinstaller
-pyinstaller --onefile --windowed --add-binary "meltembin:." meltemgui.py
-sudo cp dist/meltemgui /usr/local/bin
-```
+Read it like this: ACTION | CLI | GUI
+
+Build | `make` | `make gui`
+Build and install | `make install` | `make install-gui`
+Uninstall | `make uninstall` | `make uninstall-gui`
 
 Alternatively, you can run the GUI directly with Python:
 ```bash
@@ -57,21 +41,7 @@ The intended usage for meltembin is:
 meltembin <cue-file> [dest-dir]
 ```
 
-The binary doesn't have a batch mode, but you can easily achieve this with a shell command:
-
-```bash
-for cue in srcdir/*.cue; do meltembin "$cue" dest-dir/; done
-```
-
-The program currently expects PSX BIN files referenced by the CUE sheet to use 2352-byte sectors.
-Example:
-```text
-FILE "Castlevania - Symphony of the Night (USA) (Track 1).bin" BINARY
-  TRACK 01 MODE2/2352
-    INDEX 01 00:00:00
-```
-
-Currently, the output filename cannot be specified manually. The generated `.bin` file keeps the same base name as the input `.cue` file.
+If no destination directory is specified, the generated files are created in the current directory. The output filename cannot be specified manually, so the generated `.bin` file keeps the same base name as the input `.cue` file.
 
 For example:
 
@@ -87,13 +57,22 @@ dest-dir/
 └── Castlevania SOTN (USA).cue
 ```
 
-If no destination directory is specified:
+### batch processing
+
+The binary doesn't have a batch mode, but you can easily achieve this with a shell command:
 
 ```bash
-meltembin bingame/Castlevania\ SOTN\ \(USA\).cue
+for cue in srcdir/*.cue; do meltembin "$cue" dest-dir/; done
 ```
 
-the generated files are created in the current directory.
+## supported BIN format
+The program currently expects PSX BIN files referenced by the CUE sheet to use 2352-byte sectors.
+Example:
+```text
+FILE "Castlevania - Symphony of the Night (USA) (Track 1).bin" BINARY
+  TRACK 01 MODE2/2352
+    INDEX 01 00:00:00
+```
 
 ## status
 
