@@ -18,7 +18,6 @@ gui: meltembin gui/meltemgui.py
 	@rm -rf dist build .venv meltemgui.spec meltembin
 
 install-gui: gui
-	@cd gui
 	@sudo install -Dm755 meltemgui /usr/local/bin/meltemgui
 	@rm meltemgui
 
