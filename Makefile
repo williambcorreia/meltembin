@@ -8,6 +8,13 @@ all: meltembin
 meltembin: meltembin.c functions.c functions.h
 	@$(CC) $(CFLAGS) meltembin.c functions.c -o meltembin
 
+install: meltembin
+	@sudo install -Dm755 meltembin /usr/local/bin/meltembin
+	@rm meltembin
+
+uninstall:
+	@sudo rm -f /usr/local/bin/meltembin
+
 gui: meltembin gui/meltemgui.py
 	@mv meltembin gui
 	@cd gui
@@ -21,11 +28,7 @@ install-gui: gui
 	@sudo install -Dm755 meltemgui /usr/local/bin/meltemgui
 	@rm meltemgui
 
-install: meltembin
-	@sudo install -Dm755 meltembin /usr/local/bin/meltembin
-	@rm meltembin
+uninstall-gui:
+	@sudo rm -f /usr/local/bin/meltemgui
 
-uninstall:
-	@sudo rm -f /usr/local/bin/meltembin
-
-.PHONY: all install uninstall gui install-gui
+.PHONY: all install uninstall gui install-gui uninstall-gui
