@@ -74,7 +74,7 @@ The binary doesn't have a batch function, but you can easily achieve this with a
 for cue in srcdir/*.cue; do meltembin "$cue" dest-dir/; done
 ```
 
-### renaming output bin
+### renaming output BIN
 
 To rename the output `.bin` and its references on the `.cue` sheet, you can execute the `sed` command.
 
