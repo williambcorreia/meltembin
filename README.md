@@ -76,15 +76,14 @@ for cue in srcdir/*.cue; do meltembin "$cue" dest-dir/; done
 
 ### renaming output BIN
 
-To rename the output `.bin` and its references on the `.cue` sheet, you can execute the `sed` command.
+To rename the output `.bin` and its references on the `.cue` sheet, you can use the `mbrename` shell script included with `make install`. It takes a `.cue` file as input, prompts you for a new name, then renames both the `.cue` and `.bin` files and updates all `.bin` references in the `.cue` file accordingly.
 
-First, substitute all occurrences of the game in `game.cue` with `sed -i 's/game.bin/NewGame.bin/g' .cuefile`, then the actual game file with `mv game.bin NewGame.bin`.
-
-Example:
+You can use the script with files in the same directory or in different ones:
 
 ```bash
-sed -i 's/Castlevania - Symphony of the Night (USA).bin/Castlevania SOTN.bin/g' Castlevania\ -\ Symphony\ of\ the\ Night\ \(USA\).cue
-mv 'Castlevania - Symphony of the Night (USA).bin' 'Castlevania SOTN.bin'
+mbrename game1.cue game2.cue
+mbrename games/*.cue
+mbrename games1/game.cue games2/game.cue
 ```
 
 ## status
