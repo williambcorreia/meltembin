@@ -1,6 +1,6 @@
 # meltembin (a pun on "melt em' bin")
 
-## What is meltembin?
+## what is meltembin?
 
 meltembin is a PSX BIN/CUE merger that combines multiple BIN tracks referenced by a CUE sheet into a single BIN/CUE pair. It can be used from the command line or through the graphical interface.
 
