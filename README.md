@@ -85,7 +85,3 @@ mbrename game1.cue game2.cue
 mbrename games/*.cue
 mbrename games1/game.cue games2/game.cue
 ```
-
-## status
-
-The project is currently functional and under active development.
