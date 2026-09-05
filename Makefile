@@ -10,6 +10,7 @@ meltembin: meltembin.c functions.c functions.h
 
 install: meltembin
 	@sudo install -Dm755 meltembin /usr/local/bin/meltembin
+	@sudo install -Dm755 mbrename /usr/local/bin/mbrename
 	@rm meltembin
 
 uninstall:
