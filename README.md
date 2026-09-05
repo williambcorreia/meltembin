@@ -1,6 +1,8 @@
-# meltembin
+# meltembin (a pun on "melt em' bin")
 
-meltembin (a pun on "melt em' bin") is a simple program written in C that parses a `.cue` file and melts all referenced `.bin` files into a single one.
+## What is meltembin?
+
+meltembin is a PSX BIN/CUE merger that combines multiple BIN tracks referenced by a CUE sheet into a single BIN/CUE pair. It can be used from the command line or through the graphical interface.
 
 ## releases
 
