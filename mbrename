@@ -1,0 +1,14 @@
+#!/usr/bin/env sh
+
+for cue in "$@"; do
+	printf "\n%s\n" "$(basename "$cue" .cue)"
+	printf "New name: "
+	read -r newCue
+
+	dir=$(dirname "$cue")
+	bin="${cue%.cue}.bin"
+
+	mv "$cue" "$dir/$newCue.cue"
+	mv "$bin" "$dir/$newCue.bin"
+	sed -i "s/\".*\"/\"$newCue.bin\"/g" "$dir/$newCue.cue"
+done
